@@ -108,15 +108,15 @@ namespace osu.Framework.Audio.Track
                 currentAmplitudes.LeftChannel = leftChannel;
                 currentAmplitudes.RightChannel = rightChannel;
 
-                float[] tempFrequencyData = new float[256];
-                Bass.ChannelGetData(activeStream, tempFrequencyData, (int)DataFlags.FFT512);
+                float[] tempFrequencyData = new float[1024];
+                Bass.ChannelGetData(activeStream, tempFrequencyData, (int)DataFlags.FFT2048);
                 currentAmplitudes.FrequencyAmplitudes = tempFrequencyData;
             }
             else
             {
                 currentAmplitudes.LeftChannel = 0;
                 currentAmplitudes.RightChannel = 0;
-                currentAmplitudes.FrequencyAmplitudes = new float[256];
+                currentAmplitudes.FrequencyAmplitudes = new float[1024];
             }
 
             base.UpdateState();
