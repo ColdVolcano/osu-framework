@@ -7,7 +7,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Input;
+using osu.Framework.Input.States;
 using osu.Framework.Testing;
 using OpenTK;
 using OpenTK.Graphics;
@@ -128,12 +128,12 @@ namespace osu.Framework.Tests.Visual
             path.Positions = vertices.ToList();
         });
 
-        private void test(Vector2 position, bool shouldReceiveMouseInput)
+        private void test(Vector2 position, bool shouldReceivePositionalInput)
         {
-            AddAssert($"Test @ {position} = {shouldReceiveMouseInput}", () =>
+            AddAssert($"Test @ {position} = {shouldReceivePositionalInput}", () =>
             {
                 testPoint.Position = position;
-                return path.ReceiveMouseInputAt(path.ToScreenSpace(position)) == shouldReceiveMouseInput;
+                return path.ReceivePositionalInputAt(path.ToScreenSpace(position)) == shouldReceivePositionalInput;
             });
         }
 

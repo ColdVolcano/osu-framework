@@ -15,14 +15,14 @@ using System.Linq;
 namespace osu.Framework.Graphics.Cursor
 {
     /// <summary>
-    /// Displays Tooltips for all its children that inherit from the <see cref="IHasTooltip"/> or <see cref="IHasCustomTooltip"/> interfaces. Keep in mind that only children with <see cref="Drawable.HandleMouseInput"/> set to true will be checked for their tooltips.
+    /// Displays Tooltips for all its children that inherit from the <see cref="IHasTooltip"/> or <see cref="IHasCustomTooltip"/> interfaces. Keep in mind that only children with <see cref="Drawable.HandlePositionalInput"/> set to true will be checked for their tooltips.
     /// </summary>
     public class TooltipContainer : CursorEffectContainer<TooltipContainer, IHasTooltip>, IHandleGlobalInput
     {
         private readonly CursorContainer cursorContainer;
         private readonly ITooltip defaultTooltip;
 
-        private ITooltip currentTooltip;
+        protected ITooltip CurrentTooltip;
 
         private InputManager inputManager;
 
@@ -63,8 +63,8 @@ namespace osu.Framework.Graphics.Cursor
             {
                 RelativeSizeAxes = Axes.Both,
             });
-            AddInternal((Drawable)(currentTooltip = CreateTooltip()));
-            defaultTooltip = currentTooltip;
+            AddInternal((Drawable)(CurrentTooltip = CreateTooltip()));
+            defaultTooltip = CurrentTooltip;
         }
 
         protected override void OnSizingChanged()
@@ -117,12 +117,12 @@ namespace osu.Framework.Graphics.Cursor
             Vector2 tooltipPos = cursorCentre + southEast * boundingRadius;
 
             // Clamp position to tooltip container
-            tooltipPos.X = Math.Min(tooltipPos.X, DrawWidth - currentTooltip.DrawSize.X - 5);
+            tooltipPos.X = Math.Min(tooltipPos.X, DrawWidth - CurrentTooltip.DrawSize.X - 5);
             float dX = Math.Max(0, tooltipPos.X - cursorCentre.X);
             float dY = (float)Math.Sqrt(boundingRadius * boundingRadius - dX * dX);
 
-            if (tooltipPos.Y > DrawHeight - currentTooltip.DrawSize.Y - 5)
-                tooltipPos.Y = cursorCentre.Y - dY - currentTooltip.DrawSize.Y;
+            if (tooltipPos.Y > DrawHeight - CurrentTooltip.DrawSize.Y - 5)
+                tooltipPos.Y = cursorCentre.Y - dY - CurrentTooltip.DrawSize.Y;
             else
                 tooltipPos.Y = cursorCentre.Y + dY;
 
@@ -144,12 +144,19 @@ namespace osu.Framework.Graphics.Cursor
             {
                 currentlyDisplayed = target;
 
-                RemoveInternal((Drawable)currentTooltip);
-                currentTooltip = getTooltip(target);
-                AddInternal((Drawable)currentTooltip);
+                var newTooltip = getTooltip(target);
 
-                currentTooltip.Show();
-                RefreshTooltip(currentTooltip, target);
+                if (newTooltip != CurrentTooltip)
+                {
+                    RemoveInternal((Drawable)CurrentTooltip);
+                    CurrentTooltip = newTooltip;
+                    AddInternal((Drawable)newTooltip);
+                }
+
+                if (hasValidTooltip(target))
+                    CurrentTooltip.Show();
+
+                RefreshTooltip(CurrentTooltip, target);
             }
         }
 
@@ -200,7 +207,7 @@ namespace osu.Framework.Graphics.Cursor
 
             // For determining whether to show a tooltip we first select only those positions
             // which happened within a shorter, alpha-adjusted appear delay.
-            double alphaModifiedAppearDelay = (1 - currentTooltip.Alpha) * appearDelay;
+            double alphaModifiedAppearDelay = (1 - CurrentTooltip.Alpha) * appearDelay;
             var relevantPositions = recentMousePositions.Where(t => Time.Current - t.Time <= alphaModifiedAppearDelay);
 
             // We then check whether all relevant positions fall within a radius of AppearRadius within the
@@ -223,7 +230,7 @@ namespace osu.Framework.Graphics.Cursor
         /// <param name="tooltipTarget">The target of the tooltip.</param>
         protected virtual void RefreshTooltip(ITooltip tooltip, IHasTooltip tooltipTarget)
         {
-            if (tooltipTarget != null)
+            if (tooltipTarget != null && hasValidTooltip(tooltipTarget))
             {
                 tooltip.TooltipText = tooltipTarget.TooltipText;
                 tooltip.Refresh();
@@ -236,7 +243,7 @@ namespace osu.Framework.Graphics.Cursor
         {
             base.UpdateAfterChildren();
 
-            RefreshTooltip(currentTooltip, currentlyDisplayed);
+            RefreshTooltip(CurrentTooltip, currentlyDisplayed);
 
             if (currentlyDisplayed != null && ShallHideTooltip(currentlyDisplayed))
                 hideTooltip();
@@ -244,7 +251,7 @@ namespace osu.Framework.Graphics.Cursor
 
         private void hideTooltip()
         {
-            currentTooltip.Hide();
+            CurrentTooltip.Hide();
             currentlyDisplayed = null;
         }
 
@@ -272,8 +279,8 @@ namespace osu.Framework.Graphics.Cursor
                 set => text.Text = value;
             }
 
-            public override bool HandleKeyboardInput => false;
-            public override bool HandleMouseInput => false;
+            public override bool HandleNonPositionalInput => false;
+            public override bool HandlePositionalInput => false;
 
             private const float text_size = 16;
 

@@ -5,6 +5,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input;
+using osu.Framework.Input.States;
 using OpenTK;
 using OpenTK.Graphics;
 
@@ -30,7 +31,9 @@ namespace osu.Framework.Graphics.Cursor
 
         protected virtual Drawable CreateCursor() => new Cursor();
 
-        public override bool ReceiveMouseInputAt(Vector2 screenSpacePos) => true;
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
+
+        public override bool HandlePositionalInput => IsPresent; // make sure we are still updating position during possible fade out.
 
         protected override bool OnMouseMove(InputState state)
         {
