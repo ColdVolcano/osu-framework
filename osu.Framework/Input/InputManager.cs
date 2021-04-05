@@ -137,6 +137,7 @@ namespace osu.Framework.Input
         private readonly Dictionary<TabletAuxiliaryButton, TabletAuxiliaryButtonEventManager> tabletAuxiliaryButtonEventManagers = new Dictionary<TabletAuxiliaryButton, TabletAuxiliaryButtonEventManager>();
         private readonly Dictionary<JoystickButton, JoystickButtonEventManager> joystickButtonEventManagers = new Dictionary<JoystickButton, JoystickButtonEventManager>();
         private readonly Dictionary<MidiKey, MidiKeyEventManager> midiKeyEventManagers = new Dictionary<MidiKey, MidiKeyEventManager>();
+        private readonly Dictionary<MidiControl, MidiControlEventManager> midiControlEventManagers = new Dictionary<MidiControl, MidiControlEventManager>();
 
         private readonly Dictionary<JoystickAxisSource, JoystickAxisEventManager> joystickAxisEventManagers = new Dictionary<JoystickAxisSource, JoystickAxisEventManager>();
 
@@ -324,6 +325,18 @@ namespace osu.Framework.Input
             var manager = CreateButtonEventManagerFor(key);
             manager.GetInputQueue = () => NonPositionalInputQueue;
             return midiKeyEventManagers[key] = manager;
+        }
+
+        public virtual MidiControlEventManager CreateMidiControlEventManagerFor(MidiControl control) => new MidiControlEventManager(control);
+
+        public MidiControlEventManager GetMidiControlEventManagerFor(MidiControl control)
+        {
+            if (midiControlEventManagers.TryGetValue(control, out var existing))
+                return existing;
+
+            var manager = CreateMidiControlEventManagerFor(control);
+            manager.GetInputQueue = () => NonPositionalInputQueue;
+            return midiControlEventManagers[control] = manager;
         }
 
         /// <summary>
@@ -738,11 +751,18 @@ namespace osu.Framework.Input
                 case ButtonStateChangeEvent<MidiKey> midiKeyStateChange:
                     HandleMidiKeyStateChange(midiKeyStateChange);
                     return;
+
+                case MidiControlChangeEvent midiControlChange:
+                    HandleMidiControlStateChange(midiControlChange);
+                    return;
             }
         }
 
         protected virtual void HandleJoystickAxisChange(JoystickAxisChangeEvent e)
             => GetJoystickAxisEventManagerFor(e.Axis.Source).HandleAxisChange(e.State, e.Axis.Value, e.LastValue);
+
+        protected virtual void HandleMidiControlStateChange(MidiControlChangeEvent e)
+            => GetMidiControlEventManagerFor(e.Control).HandleControlChange(e.State, e.Value);
 
         protected virtual void HandleMousePositionChange(MousePositionChangeEvent e)
         {

@@ -221,6 +221,12 @@ namespace osu.Framework.Input.Handlers.Midi
                     PendingInputs.Enqueue(new MidiKeyInput((MidiKey)key, 0, false));
                     FrameStatistics.Increment(StatisticsCounterType.MidiEvents);
                     break;
+
+                case MidiEvent.CC:
+                    Logger.Log($"CC: {(MidiControl)key}/{velocity / 128f:P}");
+                    PendingInputs.Enqueue(new MidiControlInput((MidiControl)key, velocity));
+                    FrameStatistics.Increment(StatisticsCounterType.MidiEvents);
+                    break;
             }
         }
     }

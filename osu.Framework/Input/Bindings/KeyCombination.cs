@@ -160,8 +160,8 @@ namespace osu.Framework.Input.Bindings
             if (key >= InputKey.FirstTabletPenButton)
                 return $"Tablet Pen {key - InputKey.FirstTabletPenButton + 1}";
 
-            if (key >= InputKey.MidiA0)
-                return key.ToString().Substring("Midi".Length).Replace("Sharp", "#");
+            if (key >= InputKey.MidiBNegative1)
+                return key.ToString().Substring("Midi".Length).Replace("Sharp", "#").Replace("Negative", "-");
 
             if (key >= InputKey.FirstJoystickHatRightButton)
                 return $"Joystick Hat {key - InputKey.FirstJoystickHatRightButton + 1} Right";
@@ -419,7 +419,7 @@ namespace osu.Framework.Input.Bindings
                 yield return InputKey.MouseWheelLeft;
         }
 
-        public static InputKey FromMidiKey(MidiKey key) => (InputKey)((int)InputKey.MidiA0 + key - MidiKey.A0);
+        public static InputKey FromMidiKey(MidiKey key) => (InputKey)((int)InputKey.MidiBNegative1 + key - MidiKey.BNegative1);
 
         public static InputKey FromTabletPenButton(TabletPenButton penButton) => (InputKey)((int)InputKey.FirstTabletPenButton + penButton);
 

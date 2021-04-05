@@ -8,7 +8,7 @@ using osu.Framework.Input.States;
 
 namespace osu.Framework.Input.Events
 {
-    public abstract class MidiEvent : UIEvent
+    public abstract class MidiKeyEvent : UIEvent
     {
         public readonly MidiKey Key;
         public readonly byte Velocity;
@@ -28,7 +28,7 @@ namespace osu.Framework.Input.Events
         /// </summary>
         public IEnumerable<MidiKey> PressedKeys => CurrentState.Midi.Keys;
 
-        protected MidiEvent([NotNull] InputState state, MidiKey key, byte velocity)
+        protected MidiKeyEvent([NotNull] InputState state, MidiKey key, byte velocity)
             : base(state)
         {
             Key = key;

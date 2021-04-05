@@ -5,7 +5,18 @@ namespace osu.Framework.Input
 {
     public enum MidiKey
     {
-        A0 = 21,
+        BNegative1 = 11,
+
+        C0,
+        CSharp0,
+        D0,
+        DSharp0,
+        E0,
+        F0,
+        FSharp0,
+        G0,
+        GSharp0,
+        A0,
         ASharp0,
         B0,
 

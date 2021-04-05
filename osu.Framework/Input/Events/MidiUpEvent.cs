@@ -6,7 +6,7 @@ using osu.Framework.Input.States;
 
 namespace osu.Framework.Input.Events
 {
-    public class MidiUpEvent : MidiEvent
+    public class MidiUpEvent : MidiKeyEvent
     {
         public MidiUpEvent([NotNull] InputState state, MidiKey key)
             : base(state, key, 0)

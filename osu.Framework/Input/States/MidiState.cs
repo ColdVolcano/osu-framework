@@ -9,5 +9,6 @@ namespace osu.Framework.Input.States
     {
         public readonly ButtonStates<MidiKey> Keys = new ButtonStates<MidiKey>();
         public readonly Dictionary<MidiKey, byte> Velocities = new Dictionary<MidiKey, byte>();
+        public readonly Dictionary<MidiControl, byte> Controls = new Dictionary<MidiControl, byte>();
     }
 }

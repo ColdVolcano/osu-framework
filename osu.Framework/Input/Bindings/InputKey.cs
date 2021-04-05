@@ -1892,9 +1892,59 @@ namespace osu.Framework.Input.Bindings
         #region MIDI
 
         /// <summary>
+        /// B-1 key on a MIDI input device.
+        /// </summary>
+        MidiBNegative1 = 8183,
+
+        /// <summary>
+        /// C0 key on a MIDI input device.
+        /// </summary>
+        MidiC0,
+
+        /// <summary>
+        /// C#0 key on a MIDI input device.
+        /// </summary>
+        MidiCSharp0,
+
+        /// <summary>
+        /// D0 key on a MIDI input device.
+        /// </summary>
+        MidiD0,
+
+        /// <summary>
+        /// D#0 key on a MIDI input device.
+        /// </summary>
+        MidiDSharp0,
+
+        /// <summary>
+        /// E0 key on a MIDI input device.
+        /// </summary>
+        MidiE0,
+
+        /// <summary>
+        /// F0 key on a MIDI input device.
+        /// </summary>
+        MidiF0,
+
+        /// <summary>
+        /// F#0 key on a MIDI input device.
+        /// </summary>
+        MidiFSharp0,
+
+        /// <summary>
+        /// G0 key on a MIDI input device.
+        /// </summary>
+        MidiG0,
+
+        /// <summary>
+        /// G#0 key on a MIDI input device.
+        /// </summary>
+        MidiGSharp0,
+
+        /// <summary>
         /// A0 key on a MIDI input device.
         /// </summary>
-        MidiA0 = 8192 + 1,
+        MidiA0,
 
         /// <summary>
         /// A#0 key on a MIDI input device.

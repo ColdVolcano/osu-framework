@@ -2063,6 +2063,9 @@ namespace osu.Framework.Graphics
                     OnMidiUp(midiUp);
                     return false;
 
+                case MidiControlEvent midiControlChange:
+                    return OnMidiControlChange(midiControlChange);
+
                 case TabletPenButtonPressEvent tabletPenButtonPress:
                     return OnTabletPenButtonPress(tabletPenButtonPress);
 
@@ -2285,6 +2288,8 @@ namespace osu.Framework.Graphics
         /// </remarks>
         /// <param name="e">The <see cref="MidiUpEvent"/> containing information about the input event.</param>
         protected virtual void OnMidiUp(MidiUpEvent e) => Handle(e);
+
+        protected virtual bool OnMidiControlChange(MidiControlEvent e) => Handle(e);
 
         /// <summary>
         /// An event that occurs when a <see cref="TabletPenButton"/> is pressed.
