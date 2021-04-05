@@ -2403,7 +2403,8 @@ namespace osu.Framework.Graphics
                 nameof(OnTabletAuxiliaryButtonPress),
                 nameof(OnTabletAuxiliaryButtonRelease),
                 nameof(OnMidiDown),
-                nameof(OnMidiUp)
+                nameof(OnMidiUp),
+                nameof(OnMidiControlChange)
             };
 
             private static readonly Type[] positional_input_interfaces =
